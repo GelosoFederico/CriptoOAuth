@@ -16,9 +16,6 @@ def create_app(config=None):
     
     setup_app(app)
 
-    # Persist DB
-    home_path = os.path.expanduser('~')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(home_path, 'oauth.db')
     return app
 
 def setup_app(app):
@@ -26,6 +23,11 @@ def setup_app(app):
     @app.before_first_request
     def create_tables():
         db.create_all()
+
+     # Persist DB
+    home_path = os.path.expanduser('~')
+    path_db_local = os.path.join(home_path, 'oauth.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + path_db_local
 
     db.init_app(app)
     config_oauth(app)
