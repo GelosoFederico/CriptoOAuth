@@ -10,9 +10,9 @@ pip install -r requirements.txt
 
 ## Client app
 
-To run the client app, just do:git 
+To run the client app, just do:
 ```
 python client_app/app.py
 ```
 
-It runs in debug mode.
+You can run it in debug mode with the flag --debug.

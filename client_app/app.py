@@ -1,6 +1,8 @@
+import argparse
+from urllib.parse import quote
+
 from flask import Flask, url_for
 from flask import redirect, request, jsonify
-from urllib.parse import quote
 import requests
 
 app = Flask(__name__)
@@ -47,6 +49,11 @@ def receive_code():
 
     return requests.get('https://127.0.0.1:5000/api/me',headers=headers, verify=False).text
 
-app.run(port=5001)
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--debug", action='store_true')
+args = parser.parse_args()
+
+app.run(port=5001, debug=args.debug)
 
 
