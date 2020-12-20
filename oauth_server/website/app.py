@@ -1,4 +1,5 @@
 # website/app.py
+import os
 from flask import Flask
 from .models import db
 from .routes import bp
@@ -12,7 +13,12 @@ def create_app(config=None):
             app.config.update(config)
         elif config.endswith('.py'):
             app.config.from_pyfile(config)
+    
     setup_app(app)
+
+    # Persist DB
+    home_path = os.path.expanduser('~')
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(home_path, 'oauth.db')
     return app
 
 def setup_app(app):
