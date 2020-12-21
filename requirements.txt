@@ -1,0 +1,5 @@
+Flask==1.1.2
+Flask-SQLAlchemy
+Authlib==0.14.3
+pyOpenSSL
+requests
