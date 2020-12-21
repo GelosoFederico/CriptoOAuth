@@ -6,7 +6,10 @@ from flask import redirect, request, jsonify
 import requests
 
 app = Flask(__name__)
+
 # TODO que el client_id y client_secret se pasen como parametros al iniciar / en otro lado
+CLIENT_ID = 'p3A4yLY7fJ9dqtSxknlncrCF'
+CLIENT_SECRET = 'tJYy8q1cjR4fODaCTEwA8xQIUBmMaLGwCQ0JEjSrxatBelAX'
 
 @app.route('/hello_world')
 def hello_world():
@@ -23,21 +26,21 @@ def login():
 def test_oauth():
     # Primer paso de RFC 6749 punto 4.1 authorization code grant. Aca esta medio cambiado de la RFC 
     # TODO ver porque
-    client_id = 'fb0LhrpeBcwg6dHzFS13WGss'
+    client_id = CLIENT_ID
     # paso A porque mando el client identifier y en el scope esta la redirect_URI
     # En el medio esto pide el consentimiento de parte del owner. Eso es el paso B
     # Una vez dado el consentimiento, devuelve el authorization code a la redirect_URI, que es el paso C 
     # La redirect URI es /receive_code
-    return redirect('https://127.0.0.1:5000/oauth/authorize?response_type=code&client_id='+client_id+'&scope=profile')
+    return redirect('https://127.0.0.1:5002/oauth/authorize?response_type=code&client_id='+client_id+'&scope=profile')
 
 # Este es el endpoint donde el oauth debe devolver el authorization code con el que se pide el token
 @app.route('/receive_code')
 def receive_code():
     auth_code = request.args.get('code')
     # Paso D: Con el Auth code se pide el token para acceder al recurso. 
-    response_token = requests.post('https://127.0.0.1:5000/oauth/token', auth=(
-        'fb0LhrpeBcwg6dHzFS13WGss', # es el client_id
-        'S7GULjhijWaIzEwJymT8l9ui0d8BRnfAn0Lu6bFtXMicMKgV', # es el client_secret
+    response_token = requests.post('https://127.0.0.1:5002/oauth/token', auth=(
+        CLIENT_ID, # es el client_id
+        CLIENT_SECRET, # es el client_secret
         ),data={
         'code' : auth_code,
         'grant_type' : 'authorization_code',
@@ -47,7 +50,7 @@ def receive_code():
 
     headers = {"Authorization": "Bearer "+ str(token)}
 
-    return requests.get('https://127.0.0.1:5000/api/me',headers=headers, verify=False).text
+    return requests.get('https://127.0.0.1:5002/api/me',headers=headers, verify=False).text
 
 
 parser = argparse.ArgumentParser()
