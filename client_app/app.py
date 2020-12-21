@@ -8,8 +8,8 @@ import requests
 app = Flask(__name__)
 
 # TODO que el client_id y client_secret se pasen como parametros al iniciar / en otro lado
-CLIENT_ID = 'p3A4yLY7fJ9dqtSxknlncrCF'
-CLIENT_SECRET = 'tJYy8q1cjR4fODaCTEwA8xQIUBmMaLGwCQ0JEjSrxatBelAX'
+CLIENT_ID = '74QSXPEyaqd6Ru1rraJgXPWM'
+CLIENT_SECRET = 'rMM8gJpCfPwUhycb3DicKrmomS8P49Y3n7y28nYENnzaiB39'
 
 @app.route('/hello_world')
 def hello_world():
@@ -53,10 +53,12 @@ def receive_code():
     return requests.get('https://127.0.0.1:5002/api/me',headers=headers, verify=False).text
 
 
+'''
 parser = argparse.ArgumentParser()
 parser.add_argument("--debug", action='store_true')
 args = parser.parse_args()
 
 app.run(port=5001, debug=args.debug)
-
+'''
+app.run(port=5001 )
 
