@@ -13,7 +13,6 @@ cripto_config = os.path.join(home, '.cripto-tp')
 CLIENT_CONFIG_PATH = os.path.join(cripto_config, 'client_keys.json')
 
 # To decode JWT
-PUB_KEY_PATH = os.path.join(cripto_config, 'ssh-key.pub')
 
 def token_verif(f):
     @wraps(f)
@@ -26,7 +25,7 @@ def token_verif(f):
             return jsonify({'message' : 'token required'}), 403
         
         try:
-            public_key = open(PUB_KEY_PATH, 'rb').read()
+            public_key = open(current_app.config['PUBLIC_KEY_PATH'], 'rb').read()
             data = jwt.decode(token, public_key, algorithms=["RS256"])
         except Exception as e:
             traceback.print_exc()

@@ -16,9 +16,7 @@ from authlib.oauth2.rfc7636 import CodeChallenge
 from .models import db, User
 from .models import OAuth2Client, OAuth2AuthorizationCode, OAuth2Token
 
-home = os.path.expanduser('~')
-cripto_config = os.path.join(home, '.cripto-tp')
-OAUTH_PRIVATE_KEY_PATH = os.path.join(cripto_config, 'ssh-key')
+OAUTH_PRIVATE_KEY_PATH = 'oauth_server/jwt_keys/ssh-key'
 
 def gen_access_token(client, grant_type, user, scope):
     payload = {
@@ -31,8 +29,7 @@ def gen_access_token(client, grant_type, user, scope):
         'client_id': client.client_id
     }
     private_key = open(OAUTH_PRIVATE_KEY_PATH, 'rb').read()
-    s = jwt.encode(payload, private_key,
-               algorithm='RS256')
+    s = jwt.encode(payload, private_key, algorithm='RS256')
     return s
 
 class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):

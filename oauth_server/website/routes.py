@@ -1,12 +1,10 @@
-
 import time
 from flask import Blueprint, request, session, url_for
-from flask import render_template, redirect, jsonify
+from flask import render_template, redirect
 from werkzeug.security import gen_salt
-from authlib.integrations.flask_oauth2 import current_token
 from authlib.oauth2 import OAuth2Error
 from .models import db, User, OAuth2Client
-from .oauth2 import authorization, require_oauth
+from .oauth2 import authorization
 
 
 bp = Blueprint(__name__, 'home')
@@ -105,7 +103,6 @@ def authorize():
             return error.error
         return render_template('authorize.html', user=user, grant=grant)
     if not user and 'username' in request.form:
-        print("Hello")
         username = request.form.get('username')
         user = User.query.filter_by(username=username).first()
     if request.form['confirm']:
@@ -118,16 +115,3 @@ def authorize():
 @bp.route('/oauth/token', methods=['POST'])
 def issue_token():
     return authorization.create_token_response()
-
-
-@bp.route('/oauth/revoke', methods=['POST'])
-def revoke_token():
-    return authorization.create_endpoint_response('revocation')
-
-
-# TODO: esto vuela
-@bp.route('/api/me')
-@require_oauth('profile')
-def api_me():
-    user = current_token.user
-    return jsonify(id=user.id, username=user.username)

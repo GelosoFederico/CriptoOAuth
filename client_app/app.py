@@ -58,18 +58,8 @@ def receive_code():
     json_data = response_token.json()
     token = json_data['access_token']
     # Nos devolvio el token (paso E). Este lo ponemos en el header y con eso nos devuelve los datos pedidos
-
+    print("Token is:", token)
     headers = {"Authorization": "Bearer "+ str(token)}
 
     return requests.get('https://127.0.0.1:5003/user_info',headers=headers, verify=False).text
-
-
-'''
-parser = argparse.ArgumentParser()
-parser.add_argument("--debug", action='store_true')
-args = parser.parse_args()
-
-app.run(port=5001, debug=args.debug)
-'''
-app.run(port=5001)
 
