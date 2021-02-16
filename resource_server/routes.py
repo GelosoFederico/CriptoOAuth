@@ -34,10 +34,11 @@ def token_verif(f):
         
         try:
             usersInfoDB = json.loads(open(current_app.config['USERS_DB_URI']).read())
-            userDict = next(filter(lambda user : user["id"] == data["id"], usersInfoDB))
+            userDict = next(filter(lambda user : user["user_id"] == data["user_id"], usersInfoDB))
         except:
+            traceback.print_exc()
             return jsonify({'message' : 'user not found'}), 404
-        user = User(userDict["id"], userDict["nombre"], userDict["is_admin"])
+        user = User(userDict["user_id"], userDict["name"], userDict["is_admin"])
 
         return f(user, *args, **kwargs)
     return wrapped
@@ -51,6 +52,6 @@ def getUserInfo(user):
 @token_verif
 def getAllUsers(user):
     if not user.is_admin:
-        return jsonify({"message" : "El usuario no se encuentra autorizado"}), 403
+        return jsonify({"message" : "not authorized"}), 403
     usersInfoDB = json.loads(open(current_app.config['USERS_DB_URI']).read())
     return json.dumps(usersInfoDB)
