@@ -13,6 +13,25 @@ from authlib.oauth2.rfc7636 import CodeChallenge
 from .models import db, User
 from .models import OAuth2Client, OAuth2AuthorizationCode, OAuth2Token
 
+def gen_access_token(client, grant_type, user, scope):
+    print("Im getting used")
+    print('Not used yet in the JWT:: {} \n{} \n{} \n{}'.format( client, grant_type, user, scope))
+    header = {'alg': 'RS256'}
+    payload = {
+        'iss': 'http://127.0.0.1:5002/oauth/token',
+        'sub': 'test client',
+        'aud': 'profile'
+    }
+    try:
+        #key = open('wf-app-server.key', 'r').read()
+        #s = jwt.encode(header, payload, key)
+        #claims = jwt.decode(s, open('wf-app-pub.pem', 'r').read())
+        token = 'this is a dummy token!'
+    except Exception as e:
+        #print("jwt encoded:{} decoded :{} header: {}".format(s, claims, claims.header))
+        print("do nothing")
+    return token
+# OAUTH2_ACCESS_TOKEN_GENERATOR = gen_access_token
 
 class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):
     TOKEN_ENDPOINT_AUTH_METHODS = [
@@ -83,6 +102,7 @@ require_oauth = ResourceProtector()
 
 
 def config_oauth(app):
+    app.config['OAUTH2_ACCESS_TOKEN_GENERATOR'] = gen_access_token
     authorization.init_app(app)
 
     # support all grants
