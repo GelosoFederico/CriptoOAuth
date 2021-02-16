@@ -61,5 +61,5 @@ def receive_code():
     print("Token is:", token)
     headers = {"Authorization": "Bearer "+ str(token)}
 
-    return requests.get('https://127.0.0.1:5003/user_info',headers=headers, verify=False).text
+    return requests.get('https://127.0.0.1:5003/my_info',headers=headers, verify=False).text
 

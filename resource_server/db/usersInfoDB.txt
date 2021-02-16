@@ -1,16 +1,13 @@
 [
 	{
 		"user_id": 2,
- 		"name": "Juls",
-		"is_admin": false
+ 		"name": "Juls"
 	},{
 		"user_id": 3,
- 		"name": "Fede",
-		"is_admin": false
+ 		"name": "Fede"
 	},{
 		"user_id": 1,
- 		"name": "Cris",
-		"is_admin": true
+ 		"name": "Cris"
 	}
 
 ]

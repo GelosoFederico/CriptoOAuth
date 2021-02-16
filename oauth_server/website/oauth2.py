@@ -23,7 +23,7 @@ def gen_access_token(client, grant_type, user, scope):
         'iss': 'http://127.0.0.1:5002/oauth/token',
         'sub': 'test client',
         'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1),
-        'user_id':  user.id,
+        'user':  dict(user_id=user.id, is_admin=user.is_admin),
         'scope': scope,
         'grant_type': grant_type,
         'client_id': client.client_id

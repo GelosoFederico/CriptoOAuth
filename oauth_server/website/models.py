@@ -12,6 +12,7 @@ db = SQLAlchemy()
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(40), unique=True)
+    is_admin = db.Column(db.Boolean)
 
     def __str__(self):
         return self.username

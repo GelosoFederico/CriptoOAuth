@@ -26,25 +26,27 @@ def token_verif(f):
         
         try:
             public_key = open(current_app.config['PUBLIC_KEY_PATH'], 'rb').read()
-            data = jwt.decode(token, public_key, algorithms=["RS256"])
+            jwt_data = jwt.decode(token, public_key, algorithms=["RS256"])
         except Exception as e:
             traceback.print_exc()
             return jsonify({'message' : 'invalid token'}), 403
         
         try:
             usersInfoDB = json.loads(open(current_app.config['USERS_DB_URI']).read())
-            userDict = next(filter(lambda user : user["user_id"] == data["user_id"], usersInfoDB))
+            print("user: ", jwt_data["user"])
+            userDict = next(filter(lambda user : user["user_id"] == jwt_data["user"]["user_id"], usersInfoDB))
         except:
             traceback.print_exc()
             return jsonify({'message' : 'user not found'}), 404
-        user = User(userDict["user_id"], userDict["name"], userDict["is_admin"])
+
+        user = User(userDict["user_id"], userDict["name"], jwt_data["user"]["is_admin"])
 
         return f(user, *args, **kwargs)
     return wrapped
 
-@bp.route("/user_info", methods = ['GET'])
+@bp.route("/my_info", methods = ['GET'])
 @token_verif
-def getUserInfo(user):
+def get_user_info(user):
     return user.toJSON()
 
 @bp.route("/all_users", methods = ['GET'])
