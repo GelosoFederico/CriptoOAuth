@@ -109,7 +109,7 @@ def authorize():
         return render_template('authorize.html', user=user, grant=grant)
     if not user and 'username' in request.form:
         print("Hello")
-        useauthorizername = request.form.get('username')
+        username = request.form.get('username')
         user = User.query.filter_by(username=username).first()
     if request.form['confirm']:
         grant_user = user
@@ -128,6 +128,7 @@ def revoke_token():
     return authorization.create_endpoint_response('revocation')
 
 
+# TODO: esto vuela
 @bp.route('/api/me')
 @require_oauth('profile')
 def api_me():
