@@ -60,6 +60,12 @@ def receive_code():
     # Nos devolvio el token (paso E). Este lo ponemos en el header y con eso nos devuelve los datos pedidos
     print("Token is:", token)
     headers = {"Authorization": "Bearer "+ str(token)}
+    user_info = requests.get('https://127.0.0.1:5003/my_info', headers=headers, verify=False)
+    user_info = user_info.json()
+    all_users_info = requests.get('https://127.0.0.1:5003/all_users', headers=headers, verify=False)
+    all_users_info = all_users_info.json()
+    total_info = {"user_info": user_info,
+                  "all_users": all_users_info}
 
-    return requests.get('https://127.0.0.1:5003/my_info',headers=headers, verify=False).text
+    return total_info
 
