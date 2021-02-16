@@ -21,7 +21,10 @@
 
 {% else %}
 <form action="" method="post">
-  <input type="text" name="username" placeholder="username">
+  <label for="username">Username:</label>
+  <input type="text" id="username" name="username" placeholder="username">
+  <label for="isadmin">Is admin:</label>
+  <input type="checkbox" id="isadmin" name="is_admin" placeholder="true or false">
   <button type="submit">Login / Signup</button>
 </form>
 {% endif %}

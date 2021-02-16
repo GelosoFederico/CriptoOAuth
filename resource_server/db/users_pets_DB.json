@@ -1,0 +1,15 @@
+[
+	{
+		"user_id": 2,
+ 		"username": "Juls",
+ 		"pets": ["dog"]
+	},{
+		"user_id": 4,
+ 		"username": "Fede",
+ 		"pets": ["cat", "dog"]
+	},{
+		"user_id": 1,
+ 		"username": "Cris",
+ 		"pets": ["mosquito"]
+	}
+]

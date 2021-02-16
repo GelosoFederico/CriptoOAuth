@@ -1,12 +1,10 @@
-
 import time
 from flask import Blueprint, request, session, url_for
-from flask import render_template, redirect, jsonify
+from flask import render_template, redirect
 from werkzeug.security import gen_salt
-from authlib.integrations.flask_oauth2 import current_token
 from authlib.oauth2 import OAuth2Error
 from .models import db, User, OAuth2Client
-from .oauth2 import authorization, require_oauth
+from .oauth2 import authorization
 
 
 bp = Blueprint(__name__, 'home')
@@ -26,16 +24,15 @@ def split_by_crlf(s):
 @bp.route('/', methods=('GET', 'POST'))
 def home():
     if request.method == 'POST':
-        print("hello")
         username = request.form.get('username')
-        print("Got user name: ", username)
-        
+        is_admin = request.form.get('is_admin')
+        is_admin = (is_admin == "on")
+
         user = User.query.filter_by(username=username).first()
         if not user:
-            user = User(username=username)
+            user = User(username=username, is_admin=is_admin)
             db.session.add(user)
             db.session.commit()
-            print("Added user!")
         session['id'] = user.id
         # if user is not just to log in, but need to head back to the auth page, then go for it
         next_page = request.args.get('next')
@@ -108,8 +105,7 @@ def authorize():
             return error.error
         return render_template('authorize.html', user=user, grant=grant)
     if not user and 'username' in request.form:
-        print("Hello")
-        useauthorizername = request.form.get('username')
+        username = request.form.get('username')
         user = User.query.filter_by(username=username).first()
     if request.form['confirm']:
         grant_user = user
@@ -121,15 +117,3 @@ def authorize():
 @bp.route('/oauth/token', methods=['POST'])
 def issue_token():
     return authorization.create_token_response()
-
-
-@bp.route('/oauth/revoke', methods=['POST'])
-def revoke_token():
-    return authorization.create_endpoint_response('revocation')
-
-
-@bp.route('/api/me')
-@require_oauth('profile')
-def api_me():
-    user = current_token.user
-    return jsonify(id=user.id, username=user.username)
