@@ -1,10 +1,13 @@
+import os
+import datetime
+
+import jwt
 from authlib.integrations.flask_oauth2 import (
     AuthorizationServer,
     ResourceProtector,
 )
 from authlib.integrations.sqla_oauth2 import (
     create_query_client_func,
-    create_save_token_func,
     create_revocation_endpoint,
     create_bearer_token_validator,
 )
@@ -13,25 +16,26 @@ from authlib.oauth2.rfc7636 import CodeChallenge
 from .models import db, User
 from .models import OAuth2Client, OAuth2AuthorizationCode, OAuth2Token
 
+home = os.path.expanduser('~')
+cripto_config = os.path.join(home, '.cripto-tp')
+OAUTH_PRIVATE_KEY_PATH = os.path.join(cripto_config, 'ssh-key')
+
 def gen_access_token(client, grant_type, user, scope):
-    print("Im getting used")
-    print('Not used yet in the JWT:: {} \n{} \n{} \n{}'.format( client, grant_type, user, scope))
-    header = {'alg': 'RS256'}
     payload = {
         'iss': 'http://127.0.0.1:5002/oauth/token',
         'sub': 'test client',
-        'aud': 'profile'
+        'aud': 'profile',
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1),
+        'user':  user.id,
+        'scope': scope,
+        'grant_type': grant_type,
+        'client': client.client_id
     }
-    try:
-        #key = open('wf-app-server.key', 'r').read()
-        #s = jwt.encode(header, payload, key)
-        #claims = jwt.decode(s, open('wf-app-pub.pem', 'r').read())
-        token = 'this is a dummy token!'
-    except Exception as e:
-        #print("jwt encoded:{} decoded :{} header: {}".format(s, claims, claims.header))
-        print("do nothing")
-    return token
-# OAUTH2_ACCESS_TOKEN_GENERATOR = gen_access_token
+    private_key = open(OAUTH_PRIVATE_KEY_PATH, 'rb').read()
+    s = jwt.encode(payload, private_key,
+               algorithm='RS256')
+
+    return {"access_token": s}
 
 class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):
     TOKEN_ENDPOINT_AUTH_METHODS = [
@@ -91,12 +95,14 @@ class RefreshTokenGrant(grants.RefreshTokenGrant):
         db.session.add(credential)
         db.session.commit()
 
+def do_not_save(token, request):
+    pass
 
 query_client = create_query_client_func(db.session, OAuth2Client)
-save_token = create_save_token_func(db.session, OAuth2Token)
+
 authorization = AuthorizationServer(
     query_client=query_client,
-    save_token=save_token,
+    save_token=do_not_save,
 )
 require_oauth = ResourceProtector()
 

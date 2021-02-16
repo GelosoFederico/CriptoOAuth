@@ -26,16 +26,13 @@ def split_by_crlf(s):
 @bp.route('/', methods=('GET', 'POST'))
 def home():
     if request.method == 'POST':
-        print("hello")
         username = request.form.get('username')
-        print("Got user name: ", username)
         
         user = User.query.filter_by(username=username).first()
         if not user:
             user = User(username=username)
             db.session.add(user)
             db.session.commit()
-            print("Added user!")
         session['id'] = user.id
         # if user is not just to log in, but need to head back to the auth page, then go for it
         next_page = request.args.get('next')
