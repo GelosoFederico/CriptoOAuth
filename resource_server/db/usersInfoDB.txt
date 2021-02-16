@@ -1,0 +1,16 @@
+[
+	{
+		"id": 333,
+ 		"nombre": "Juls",
+		"is_admin": false
+	},{
+		"id": 444,
+ 		"nombre": "Fede",
+		"is_admin": false
+	},{
+		"id": 555,
+ 		"nombre": "Cris",
+		"is_admin": true
+	}
+
+]
