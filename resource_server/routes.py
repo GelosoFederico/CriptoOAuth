@@ -28,12 +28,13 @@ def token_verif(f):
         
         try:
             users_pets_db = json.loads(open(current_app.config['USERS_DB_URI']).read())
-            user_dict = next(filter(lambda user: user["user_id"] == jwt_data["user"]["user_id"], users_pets_db))
+            jwt_username = jwt_data["user"]["username"].lower()
+            user_dict = next(filter(lambda user: user["username"].lower() == jwt_username, users_pets_db))
         except Exception:
             traceback.print_exc()
             return jsonify({'message': 'user not found'}), 404
 
-        user = User(user_dict["user_id"], user_dict["nickname"],
+        user = User(user_dict["user_id"], user_dict["username"],
                     jwt_data["user"]["is_admin"], user_dict["pets"])
 
         return f(user, *args, **kwargs)
