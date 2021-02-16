@@ -54,12 +54,14 @@ def receive_code():
         'code' : auth_code,
         'grant_type' : 'authorization_code',
         'scope' : 'profile'}, verify=False) # TODO al arreglar el SSL para el oauth hay que sacar los verify false
-    token = response_token.json()['access_token']
+
+    json_data = response_token.json()
+    token = json_data['access_token']
     # Nos devolvio el token (paso E). Este lo ponemos en el header y con eso nos devuelve los datos pedidos
 
     headers = {"Authorization": "Bearer "+ str(token)}
 
-    return requests.get('https://127.0.0.1:5002/api/me',headers=headers, verify=False).text
+    return requests.get('https://127.0.0.1:5003/user_info',headers=headers, verify=False).text
 
 
 '''

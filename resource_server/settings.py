@@ -4,10 +4,7 @@ MYSQL_PASSWORD = 'e1ee1d23acb910d'
 MYSQL_HOST = 'us-cdbr-iron-east-04.cleardb.net'
 MYSQL_CURSORCLASS = 'DictCursor'
 
-USERS_DB_URI = 'server/db/usersInfoDB.txt'
-
-PRIVATE_KEY_URI = 'server/keys/ssh-key.txt'
-PUBLIC_KEY_URI = 'server/keys/ssh-key.pub'
+USERS_DB_URI = 'resource_server/db/usersInfoDB.txt'
 
 FLASK_APP = 'run.py'
 FLASK_ENV = 'development'

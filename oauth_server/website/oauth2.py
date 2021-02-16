@@ -24,18 +24,16 @@ def gen_access_token(client, grant_type, user, scope):
     payload = {
         'iss': 'http://127.0.0.1:5002/oauth/token',
         'sub': 'test client',
-        'aud': 'profile',
         'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1),
-        'user':  user.id,
+        'user_id':  user.id,
         'scope': scope,
         'grant_type': grant_type,
-        'client': client.client_id
+        'client_id': client.client_id
     }
     private_key = open(OAUTH_PRIVATE_KEY_PATH, 'rb').read()
     s = jwt.encode(payload, private_key,
                algorithm='RS256')
-
-    return {"access_token": s}
+    return s
 
 class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):
     TOKEN_ENDPOINT_AUTH_METHODS = [
