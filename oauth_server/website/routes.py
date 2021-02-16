@@ -25,9 +25,12 @@ def split_by_crlf(s):
 def home():
     if request.method == 'POST':
         username = request.form.get('username')
+        is_admin = request.form.get('is_admin')
+        is_admin = (is_admin == "on")
+
         user = User.query.filter_by(username=username).first()
         if not user:
-            user = User(username=username, is_admin=True)
+            user = User(username=username, is_admin=is_admin)
             db.session.add(user)
             db.session.commit()
         session['id'] = user.id
