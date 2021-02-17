@@ -40,10 +40,8 @@ def home():
             return redirect(next_page)
         return redirect('/')
     user = current_user()
-    if user:
-        clients = OAuth2Client.query.filter_by(user_id=user.id).all()
-    else:
-        clients = []
+
+    clients = OAuth2Client.query.filter_by().all()
 
     return render_template('home.html', user=user, clients=clients)
 
@@ -67,7 +65,6 @@ def create_client():
     client = OAuth2Client(
         client_id=client_id,
         client_id_issued_at=client_id_issued_at,
-        user_id=user.id,
     )
 
     form = request.form
