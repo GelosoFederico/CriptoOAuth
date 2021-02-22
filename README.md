@@ -1,18 +1,28 @@
 # OAuth2.0
 
 # Dependencies
-python 3 (>= 3.6)
+Python 3 (>= 3.6)
 
 # Set up
+
 ```
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Client app
-
-To run the client app, just do:
+## Client App
 ```
-python client_app/app.py
+OAUTHLIB_INSECURE_TRANSPORT=true FLASK_ENV=development FLASK_APP=client_app/app.py flask run --cert=adhoc --port=5001
 ```
 
-You can run it in debug mode with the flag --debug.
+## Auth Server 
+```
+OAUTHLIB_INSECURE_TRANSPORT=true FLASK_ENV=development FLASK_APP=oauth_server/app.py flask run --cert=adhoc --port=5002
+```
+
+## Resource Server
+```
+OAUTHLIB_INSECURE_TRANSPORT=true FLASK_ENV=development FLASK_APP=resource_server/app.py flask run --cert=adhoc --port=5003
+```
+
