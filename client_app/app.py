@@ -13,8 +13,6 @@ home = os.path.expanduser('~')
 cripto_config = os.path.join(home, '.cripto-tp')
 CLIENT_CONFIG_PATH = os.path.join(cripto_config, 'client_keys.json')
 
-# TODO: No se si se llama client keys
-# TODO: guardar encriptado? O para el PoC ya foe
 def get_client_keys():
     if not os.path.exists(CLIENT_CONFIG_PATH):
         raise Exception("Client keys file not found ({})".format(CLIENT_CONFIG_PATH))
@@ -28,15 +26,16 @@ def get_client_keys():
 def hello_world():
     return 'Hello, world!'
 
-# Esta es la PAGINA (no endpoint) a la que se accede y desde donde se inicia. Requiere que antes este cargado el client id y su secreto
+# Esta es la PAGINA (no endpoint) a la que se accede y desde donde se inicia.
+# Requiere que antes este cargado el client id y su secreto
 # Esto lo llama el user_agent, seria el paso A
 @app.route('/test_oauth')
 def test_oauth():
-    # Primer paso de RFC 6749 punto 4.1 authorization code grant. Aca esta medio cambiado de la RFC 
-    # TODO ver porque
+    # Primer paso de RFC 6749 punto 4.1 authorization code grant.
     client_id, _ = get_client_keys()
+
     # paso A porque mando el client identifier y en el scope esta la redirect_URI
-    # En el medio esto pide el consentimiento de parte del owner. Eso es el paso B
+    # En el medio esto pide el consentimiento de parte del owner. Eso es el paso B.
     # Una vez dado el consentimiento, devuelve el authorization code a la redirect_URI, que es el paso C 
     # La redirect URI es /receive_code
     return redirect('https://127.0.0.1:5002/oauth/authorize?response_type=code&client_id='+client_id+'&scope=profile')
@@ -46,7 +45,8 @@ def test_oauth():
 def receive_code():
     auth_code = request.args.get('code')
     client_id, client_secret = get_client_keys()
-    # Paso D: Con el Auth code se pide el token para acceder al recurso. 
+
+    # Paso D: Con el Auth code se pide el token para acceder al recurso.
     response_token = requests.post('https://127.0.0.1:5002/oauth/token', auth=(
         client_id,
         client_secret,
@@ -54,11 +54,13 @@ def receive_code():
         'code' : auth_code,
         'grant_type' : 'authorization_code',
         'scope' : 'profile'}, verify=False) # TODO al arreglar el SSL para el oauth hay que sacar los verify false
-
     json_data = response_token.json()
     token = json_data['access_token']
+
     # Nos devolvio el token (paso E). Este lo ponemos en el header y con eso nos devuelve los datos pedidos
     print("Token is:", token)
+
+    # Hacemos el request al server del recurso protegido.
     headers = {"Authorization": "Bearer "+ str(token)}
     user_info = requests.get('https://127.0.0.1:5003/my_info', headers=headers, verify=False)
     user_info = user_info.json()
