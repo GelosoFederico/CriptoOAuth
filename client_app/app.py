@@ -62,7 +62,7 @@ def receive_code():
                                    verify=False)
     if response_token.status_code == 400:
         return {"error": "Forbidden"}, 403
-    elif response_token != 200:
+    elif response_token.status_code != 200:
         return {"error": "Error in OAuth Server."}, 500
 
     json_data = response_token.json()
