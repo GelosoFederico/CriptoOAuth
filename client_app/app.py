@@ -60,7 +60,13 @@ def receive_code():
                                          'grant_type': 'authorization_code',
                                          'scope': 'profile'},
                                    verify=False)
+    if response_token.status_code == 400:
+        return {"error": "Forbidden"}, 403
+    elif response_token != 200:
+        return {"error": "Error in OAuth Server."}, 500
+
     json_data = response_token.json()
+    
     token = json_data['access_token']
 
     # Nos devolvio el token (paso E). Este lo ponemos en el header

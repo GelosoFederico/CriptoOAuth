@@ -104,7 +104,7 @@ def authorize():
     if not user and 'username' in request.form:
         username = request.form.get('username')
         user = User.query.filter_by(username=username).first()
-    if request.form['confirm']:
+    if 'confirm' in request.form:
         grant_user = user
     else:
         grant_user = None
